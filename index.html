@@ -1,66 +1,77 @@
-!DOCTYPE html
-html lang=en
-head
-  meta charset=UTF-8 
-  titleOSRS Statstitle
-  style
-    body {
-      font-family Inter, system-ui, sans-serif;
-      background #0f172a;
-      color #e5e7eb;
-      padding 16px;
-    }
-    h1 {
-      font-size 18px;
-      margin-bottom 12px;
-    }
-    .grid {
-      display grid;
-      grid-template-columns repeat(3, 1fr);
-      gap 8px;
-    }
-    .skill {
-      background #020617;
-      border-radius 8px;
-      padding 8px;
-      font-size 13px;
-      display flex;
-      justify-content space-between;
-    }
-  style
-head
-body
-  h1OSRS Stats — pdapt4oe9gjh1
-  div class=grid id=statsdiv
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>OSRS Stats</title>
 
-  script
-    const username = pdapt4oe9gj;
+  <style>
+    body {
+      font-family: Inter, system-ui, sans-serif;
+      background: #0f172a;
+      color: #e5e7eb;
+      padding: 16px;
+    }
+
+    h1 {
+      font-size: 18px;
+      margin-bottom: 12px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    .skill {
+      background: #020617;
+      border-radius: 8px;
+      padding: 8px;
+      font-size: 13px;
+      display: flex;
+      justify-content: space-between;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>OSRS Stats — pdapt4oe9gj</h1>
+  <div class="grid" id="stats"></div>
+
+  <script>
+    const username = "pdapt4oe9gj";
+
     const skills = [
-      Overall,Attack,Defence,Strength,Hitpoints,Ranged,
-      Prayer,Magic,Cooking,Woodcutting,Fletching,Fishing,
-      Firemaking,Crafting,Smithing,Mining,Herblore,Agility,
-      Thieving,Slayer,Farming,Runecraft,Hunter,Construction
+      "Overall","Attack","Defence","Strength","Hitpoints","Ranged",
+      "Prayer","Magic","Cooking","Woodcutting","Fletching","Fishing",
+      "Firemaking","Crafting","Smithing","Mining","Herblore","Agility",
+      "Thieving","Slayer","Farming","Runecraft","Hunter","Construction"
     ];
 
-    fetch(`httpscorsproxy.iohttpssecure.runescape.comm=hiscore_oldschoolindex_lite.wsplayer=${username}`)
-      .then(res = res.text())
-      .then(text = {
-        const lines = text.trim().split(n);
-        const container = document.getElementById(stats);
+    fetch(
+      "https://corsproxy.io/?" +
+      "https://secure.runescape.com/m=hiscore_oldschool/index_lite.ws?player=" +
+      username
+    )
+      .then(res => res.text())
+      .then(text => {
+        const lines = text.trim().split("\n");
+        const container = document.getElementById("stats");
 
-        lines.forEach((line, i) = {
+        lines.forEach((line, i) => {
           if (!skills[i]) return;
-          const [rank, level, xp] = line.split(,);
-          const div = document.createElement(div);
-          div.className = skill;
-          div.innerHTML = `span${skills[i]}spanstrong${level}strong`;
+
+          const [, level] = line.split(",");
+          const div = document.createElement("div");
+          div.className = "skill";
+          div.innerHTML = `<span>${skills[i]}</span><strong>${level}</strong>`;
           container.appendChild(div);
         });
       })
-      .catch(err = {
-        document.body.innerHTML = Failed to load stats.;
+      .catch(err => {
+        document.body.innerHTML = "Failed to load stats.";
         console.error(err);
       });
-  script
-body
-html
+  </script>
+</body>
+</html>
