@@ -9,63 +9,49 @@
       font-family: Inter, system-ui, sans-serif;
       background: #0f172a;
       color: #e5e7eb;
-      padding: 12px;
+      padding: 16px;
     }
 
     h1 {
-      font-size: 16px;
-      margin-bottom: 10px;
+      font-size: 18px;
+      margin-bottom: 12px;
     }
 
     #summary {
       display: flex;
-      gap: 10px;
-      margin-bottom: 12px;
+      gap: 12px;
+      margin-bottom: 16px;
     }
 
     .summary-box {
       background: #020617;
-      border-radius: 6px;
-      padding: 8px 12px;
-      font-size: 12px;
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 13px;
       display: flex;
-      align-items: center;
-      gap: 6px;
-      min-width: 100px;
-    }
-
-    .summary-box img {
-      width: 18px;
-      height: 18px;
+      flex-direction: column;
+      min-width: 120px;
     }
 
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-      gap: 6px;
-      margin-bottom: 16px;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
     }
 
-    /* Skills */
     .skill {
       background: #020617;
-      border-radius: 6px;
-      padding: 6px;
-      font-size: 12px;
+      border-radius: 8px;
+      padding: 8px;
+      font-size: 13px;
       display: flex;
       flex-direction: column;
     }
 
     .skill-name {
       display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .skill img {
-      width: 16px;
-      height: 16px;
-      vertical-align: middle;
+      justify-content: space-between;
+      margin-bottom: 4px;
     }
 
     .progress-bar {
@@ -73,7 +59,6 @@
       background: #1e293b;
       border-radius: 3px;
       overflow: hidden;
-      margin-top: 3px;
     }
 
     .progress-fill {
@@ -94,14 +79,11 @@
 
   <div id="summary">
     <div class="summary-box">
-      <img src="icons/stats.png" alt="Total Level" />
-      <div>
-        <span>Total Level</span><br />
-        <strong id="total-level">–</strong>
-      </div>
+      <span>Total Level</span>
+      <strong id="total-level">–</strong>
     </div>
     <div class="summary-box">
-      <span>Combat</span><br />
+      <span>Combat</span>
       <strong id="combat-level">–</strong>
     </div>
   </div>
@@ -118,41 +100,18 @@
       "Thieving","Slayer","Farming","Runecraft","Hunter","Construction"
     ];
 
-    const skillIcons = {
-      Overall: "icons/Stats_icon.png",
-      Attack: "icons/Attack_icon.png",
-      Defence: "icons/Defence_icon.png",
-      Strength: "icons/Strength_icon.png",
-      Hitpoints: "icons/Hitpoints_icon.png",
-      Ranged: "icons/Ranged_icon.png",
-      Prayer: "icons/Prayer_icon.png",
-      Magic: "icons/Magic_icon.png",
-      Cooking: "icons/Cooking_icon.png",
-      Woodcutting: "icons/Woodcutting_icon.png",
-      Fletching: "icons/Fletching_icon.png",
-      Fishing: "icons/Fishing_icon.png",
-      Firemaking: "icons/Firemaking_icon.png",
-      Crafting: "icons/Crafting_icon.png",
-      Smithing: "icons/Smithing_icon.png",
-      Mining: "icons/Mining_icon.png",
-      Herblore: "icons/Herblore_icon.png",
-      Agility: "icons/Agility_icon.png",
-      Thieving: "icons/Thieving_icon.png",
-      Slayer: "icons/Slayer_icon.png",
-      Farming: "icons/Farming_icon.png",
-      Runecraft: "icons/Runecraft_icon.png",
-      Hunter: "icons/Hunter_icon.png",
-      Construction: "icons/Construction_icon.png"
-    };
-
     function calculateCombat(stats) {
-      const base = 0.25 * (stats.defence + stats.hitpoints + Math.floor(stats.prayer / 2));
+      const base =
+        0.25 * (stats.defence + stats.hitpoints + Math.floor(stats.prayer / 2));
+
       const melee = 0.325 * (stats.attack + stats.strength);
       const range = 0.325 * (Math.floor(stats.ranged / 2) + stats.ranged);
       const mage  = 0.325 * (Math.floor(stats.magic / 2) + stats.magic);
+
       return Math.floor(base + Math.max(melee, range, mage));
     }
 
+    // XP formula for OSRS
     function xpForLevel(n) {
       let points = 0;
       for (let lvl = 1; lvl <= n; lvl++) {
@@ -161,13 +120,14 @@
       return Math.floor(points / 4);
     }
 
-    const skillUrl =
+    const url =
       "https://api.allorigins.win/raw?url=" +
       encodeURIComponent(
-        "https://secure.runescape.com/m=hiscore_oldschool/index_lite.ws?player=" + username
+        "https://secure.runescape.com/m=hiscore_oldschool/index_lite.ws?player=" +
+        username
       );
 
-    fetch(skillUrl)
+    fetch(url)
       .then(res => res.text())
       .then(text => {
         const lines = text.trim().split("\n");
@@ -192,28 +152,29 @@
 
           const div = document.createElement("div");
           div.className = "skill";
-          div.title = `${xp.toLocaleString()} XP / ${xpForLevel(level+1).toLocaleString()} XP to next level`;
+
+          // Calculate progress
+          const nextXP = xpForLevel(level + 1);
+          const percent = Math.min(100, Math.floor((xp / nextXP) * 100));
+
+          div.title = `${xp.toLocaleString()} XP / ${nextXP.toLocaleString()} XP to next level`;
 
           div.innerHTML = `
             <div class="skill-name">
-              <img src="${skillIcons[skills[i]]}" alt="${skills[i]}"/>
               <span>${skills[i]}</span>
+              <strong>${level}</strong>
             </div>
-            <strong>${level}</strong>
+            <div class="progress-bar">
+              <div class="progress-fill" style="width:${percent}%"></div>
+            </div>
           `;
-
-          const nextXP = xpForLevel(level + 1);
-          const percent = Math.min(100, Math.floor((xp / nextXP) * 100));
-          const bar = document.createElement("div");
-          bar.className = "progress-bar";
-          bar.innerHTML = `<div class="progress-fill" style="width:${percent}%"></div>`;
-          div.appendChild(bar);
 
           container.appendChild(div);
         });
 
         document.getElementById("total-level").textContent = totalLevel;
-        document.getElementById("combat-level").textContent = calculateCombat(levels);
+        document.getElementById("combat-level").textContent =
+          calculateCombat(levels);
       })
       .catch(err => {
         document.body.innerHTML = "Failed to load stats.";
@@ -222,4 +183,3 @@
   </script>
 </body>
 </html>
-
