@@ -17,6 +17,22 @@
       margin-bottom: 12px;
     }
 
+    #summary {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .summary-box {
+      background: #020617;
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 13px;
+      display: flex;
+      flex-direction: column;
+      min-width: 120px;
+    }
+
     .grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -36,51 +52,84 @@
 
 <body>
   <h1>OSRS Stats — pdapt4oe9gj</h1>
+
+  <div id="summary">
+    <div class="summary-box">
+      <span>Total Level</span>
+      <strong id="total-level">–</strong>
+    </div>
+    <div class="summary-box">
+      <span>Combat</span>
+      <strong id="combat-level">–</strong>
+    </div>
+  </div>
+
   <div class="grid" id="stats"></div>
 
-<script>
-  const username = "pdapt4oe9gj";
+  <script>
+    const username = "pdapt4oe9gj";
 
-  const skills = [
-    "Overall","Attack","Defence","Strength","Hitpoints","Ranged",
-    "Prayer","Magic","Cooking","Woodcutting","Fletching","Fishing",
-    "Firemaking","Crafting","Smithing","Mining","Herblore","Agility",
-    "Thieving","Slayer","Farming","Runecraft","Hunter","Construction"
-  ];
+    const skills = [
+      "Overall","Attack","Defence","Strength","Hitpoints","Ranged",
+      "Prayer","Magic","Cooking","Woodcutting","Fletching","Fishing",
+      "Firemaking","Crafting","Smithing","Mining","Herblore","Agility",
+      "Thieving","Slayer","Farming","Runecraft","Hunter","Construction"
+    ];
 
-  const url =
-    "https://api.allorigins.win/raw?url=" +
-    encodeURIComponent(
-      "https://secure.runescape.com/m=hiscore_oldschool/index_lite.ws?player=" +
-      username
-    );
+    function calculateCombat(stats) {
+      const base =
+        0.25 * (stats.defence + stats.hitpoints + Math.floor(stats.prayer / 2));
 
-  fetch(url)
-    .then(res => res.text())
-    .then(text => {
-      const lines = text.trim().split("\n");
-      const container = document.getElementById("stats");
-      container.innerHTML = "";
+      const melee = 0.325 * (stats.attack + stats.strength);
+      const range = 0.325 * (Math.floor(stats.ranged / 2) + stats.ranged);
+      const mage  = 0.325 * (Math.floor(stats.magic / 2) + stats.magic);
 
-      lines.forEach((line, i) => {
-        if (!skills[i]) return;
+      return Math.floor(base + Math.max(melee, range, mage));
+    }
 
-        const parts = line.split(",");
-        if (parts.length < 2) return;
+    const url =
+      "https://api.allorigins.win/raw?url=" +
+      encodeURIComponent(
+        "https://secure.runescape.com/m=hiscore_oldschool/index_lite.ws?player=" +
+        username
+      );
 
-        const level = parts[1];
+    fetch(url)
+      .then(res => res.text())
+      .then(text => {
+        const lines = text.trim().split("\n");
+        const container = document.getElementById("stats");
+        container.innerHTML = "";
 
-        const div = document.createElement("div");
-        div.className = "skill";
-        div.innerHTML = `<span>${skills[i]}</span><strong>${level}</strong>`;
-        container.appendChild(div);
+        let totalLevel = 0;
+        const levels = {};
+
+        lines.forEach((line, i) => {
+          if (!skills[i]) return;
+
+          const parts = line.split(",");
+          if (parts.length < 2) return;
+
+          const level = parseInt(parts[1], 10);
+          const key = skills[i].toLowerCase();
+
+          levels[key] = level;
+          totalLevel += level;
+
+          const div = document.createElement("div");
+          div.className = "skill";
+          div.innerHTML = `<span>${skills[i]}</span><strong>${level}</strong>`;
+          container.appendChild(div);
+        });
+
+        document.getElementById("total-level").textContent = totalLevel;
+        document.getElementById("combat-level").textContent =
+          calculateCombat(levels);
+      })
+      .catch(err => {
+        document.body.innerHTML = "Failed to load stats.";
+        console.error(err);
       });
-    })
-    .catch(err => {
-      document.body.innerHTML = "Failed to load stats.";
-      console.error(err);
-    });
-</script>
-
+  </script>
 </body>
 </html>
