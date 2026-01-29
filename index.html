@@ -2,48 +2,48 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>OSRS Stats</title>
+  <title>OSRS Stats — Notion Friendly</title>
 
   <style>
     body {
       font-family: Inter, system-ui, sans-serif;
       background: #0f172a;
       color: #e5e7eb;
-      padding: 16px;
+      padding: 12px;
     }
 
     h1 {
-      font-size: 18px;
-      margin-bottom: 12px;
+      font-size: 16px;
+      margin-bottom: 10px;
     }
 
     #summary {
       display: flex;
-      gap: 12px;
-      margin-bottom: 16px;
+      gap: 10px;
+      margin-bottom: 12px;
     }
 
     .summary-box {
       background: #020617;
-      border-radius: 8px;
-      padding: 10px 14px;
-      font-size: 13px;
+      border-radius: 6px;
+      padding: 8px 12px;
+      font-size: 12px;
       display: flex;
       flex-direction: column;
-      min-width: 120px;
+      min-width: 100px;
     }
 
     .grid {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      gap: 6px;
     }
 
     .skill {
       background: #020617;
-      border-radius: 8px;
-      padding: 8px;
-      font-size: 13px;
+      border-radius: 6px;
+      padding: 6px;
+      font-size: 12px;
       display: flex;
       flex-direction: column;
     }
@@ -51,27 +51,32 @@
     .skill-name {
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 4px;
     }
 
     .skill img {
-      width: 18px;
-      height: 18px;
+      width: 16px;
+      height: 16px;
       vertical-align: middle;
     }
 
     .progress-bar {
-      height: 6px;
+      height: 5px;
       background: #1e293b;
-      border-radius: 4px;
+      border-radius: 3px;
       overflow: hidden;
-      margin-top: 4px;
+      margin-top: 3px;
     }
 
     .progress-fill {
       height: 100%;
       background: #3b82f6;
       width: 0%;
+    }
+
+    .skill:hover {
+      cursor: default;
+      opacity: 0.9;
     }
   </style>
 </head>
@@ -176,8 +181,8 @@
 
           const div = document.createElement("div");
           div.className = "skill";
+          div.title = `${xp.toLocaleString()} XP / ${xpForLevel(level+1).toLocaleString()} XP to next level`;
 
-          // Skill icon + name
           div.innerHTML = `
             <div class="skill-name">
               <img src="${skillIcons[skills[i]]}" alt="${skills[i]}"/>
@@ -186,7 +191,6 @@
             <strong>${level}</strong>
           `;
 
-          // XP bar
           const nextXP = xpForLevel(level + 1);
           const percent = Math.min(100, Math.floor((xp / nextXP) * 100));
           const bar = document.createElement("div");
