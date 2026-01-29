@@ -29,16 +29,24 @@
       padding: 8px 12px;
       font-size: 12px;
       display: flex;
-      flex-direction: column;
+      align-items: center;
+      gap: 6px;
       min-width: 100px;
+    }
+
+    .summary-box img {
+      width: 18px;
+      height: 18px;
     }
 
     .grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
       gap: 6px;
+      margin-bottom: 16px;
     }
 
+    /* Skills */
     .skill {
       background: #020617;
       border-radius: 6px;
@@ -86,11 +94,14 @@
 
   <div id="summary">
     <div class="summary-box">
-      <span>Total Level</span>
-      <strong id="total-level">–</strong>
+      <img src="icons/stats.png" alt="Total Level" />
+      <div>
+        <span>Total Level</span><br />
+        <strong id="total-level">–</strong>
+      </div>
     </div>
     <div class="summary-box">
-      <span>Combat</span>
+      <span>Combat</span><br />
       <strong id="combat-level">–</strong>
     </div>
   </div>
@@ -108,30 +119,30 @@
     ];
 
     const skillIcons = {
-      Overall: "https://oldschool.runescape.wiki/images/Skill_Overall_icon.png",
-      Attack: "https://oldschool.runescape.wiki/images/Skill_Attack_icon.png",
-      Defence: "https://oldschool.runescape.wiki/images/Skill_Defence_icon.png",
-      Strength: "https://oldschool.runescape.wiki/images/Skill_Strength_icon.png",
-      Hitpoints: "https://oldschool.runescape.wiki/images/Skill_Hitpoints_icon.png",
-      Ranged: "https://oldschool.runescape.wiki/images/Skill_Ranged_icon.png",
-      Prayer: "https://oldschool.runescape.wiki/images/Skill_Prayer_icon.png",
-      Magic: "https://oldschool.runescape.wiki/images/Skill_Magic_icon.png",
-      Cooking: "https://oldschool.runescape.wiki/images/Skill_Cooking_icon.png",
-      Woodcutting: "https://oldschool.runescape.wiki/images/Skill_Woodcutting_icon.png",
-      Fletching: "https://oldschool.runescape.wiki/images/Skill_Fletching_icon.png",
-      Fishing: "https://oldschool.runescape.wiki/images/Skill_Fishing_icon.png",
-      Firemaking: "https://oldschool.runescape.wiki/images/Skill_Firemaking_icon.png",
-      Crafting: "https://oldschool.runescape.wiki/images/Skill_Crafting_icon.png",
-      Smithing: "https://oldschool.runescape.wiki/images/Skill_Smithing_icon.png",
-      Mining: "https://oldschool.runescape.wiki/images/Skill_Mining_icon.png",
-      Herblore: "https://oldschool.runescape.wiki/images/Skill_Herblore_icon.png",
-      Agility: "https://oldschool.runescape.wiki/images/Skill_Agility_icon.png",
-      Thieving: "https://oldschool.runescape.wiki/images/Skill_Thieving_icon.png",
-      Slayer: "https://oldschool.runescape.wiki/images/Skill_Slayer_icon.png",
-      Farming: "https://oldschool.runescape.wiki/images/Skill_Farming_icon.png",
-      Runecraft: "https://oldschool.runescape.wiki/images/Skill_Runecrafting_icon.png",
-      Hunter: "https://oldschool.runescape.wiki/images/Skill_Hunter_icon.png",
-      Construction: "https://oldschool.runescape.wiki/images/Skill_Construction_icon.png"
+      Overall: "icons/stats.png",
+      Attack: "icons/Attack.png",
+      Defence: "icons/Defence.png",
+      Strength: "icons/Strength.png",
+      Hitpoints: "icons/Hitpoints.png",
+      Ranged: "icons/Ranged.png",
+      Prayer: "icons/Prayer.png",
+      Magic: "icons/Magic.png",
+      Cooking: "icons/Cooking.png",
+      Woodcutting: "icons/Woodcutting.png",
+      Fletching: "icons/Fletching.png",
+      Fishing: "icons/Fishing.png",
+      Firemaking: "icons/Firemaking.png",
+      Crafting: "icons/Crafting.png",
+      Smithing: "icons/Smithing.png",
+      Mining: "icons/Mining.png",
+      Herblore: "icons/Herblore.png",
+      Agility: "icons/Agility.png",
+      Thieving: "icons/Thieving.png",
+      Slayer: "icons/Slayer.png",
+      Farming: "icons/Farming.png",
+      Runecraft: "icons/Runecraft.png",
+      Hunter: "icons/Hunter.png",
+      Construction: "icons/Construction.png"
     };
 
     function calculateCombat(stats) {
@@ -150,13 +161,13 @@
       return Math.floor(points / 4);
     }
 
-    const url =
+    const skillUrl =
       "https://api.allorigins.win/raw?url=" +
       encodeURIComponent(
         "https://secure.runescape.com/m=hiscore_oldschool/index_lite.ws?player=" + username
       );
 
-    fetch(url)
+    fetch(skillUrl)
       .then(res => res.text())
       .then(text => {
         const lines = text.trim().split("\n");
@@ -211,3 +222,4 @@
   </script>
 </body>
 </html>
+
