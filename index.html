@@ -45,7 +45,33 @@
       padding: 8px;
       font-size: 13px;
       display: flex;
-      justify-content: space-between;
+      flex-direction: column;
+    }
+
+    .skill-name {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .skill img {
+      width: 18px;
+      height: 18px;
+      vertical-align: middle;
+    }
+
+    .progress-bar {
+      height: 6px;
+      background: #1e293b;
+      border-radius: 4px;
+      overflow: hidden;
+      margin-top: 4px;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: #3b82f6;
+      width: 0%;
     }
   </style>
 </head>
@@ -76,22 +102,53 @@
       "Thieving","Slayer","Farming","Runecraft","Hunter","Construction"
     ];
 
-    function calculateCombat(stats) {
-      const base =
-        0.25 * (stats.defence + stats.hitpoints + Math.floor(stats.prayer / 2));
+    const skillIcons = {
+      Overall: "https://oldschool.runescape.wiki/images/Skill_Overall_icon.png",
+      Attack: "https://oldschool.runescape.wiki/images/Skill_Attack_icon.png",
+      Defence: "https://oldschool.runescape.wiki/images/Skill_Defence_icon.png",
+      Strength: "https://oldschool.runescape.wiki/images/Skill_Strength_icon.png",
+      Hitpoints: "https://oldschool.runescape.wiki/images/Skill_Hitpoints_icon.png",
+      Ranged: "https://oldschool.runescape.wiki/images/Skill_Ranged_icon.png",
+      Prayer: "https://oldschool.runescape.wiki/images/Skill_Prayer_icon.png",
+      Magic: "https://oldschool.runescape.wiki/images/Skill_Magic_icon.png",
+      Cooking: "https://oldschool.runescape.wiki/images/Skill_Cooking_icon.png",
+      Woodcutting: "https://oldschool.runescape.wiki/images/Skill_Woodcutting_icon.png",
+      Fletching: "https://oldschool.runescape.wiki/images/Skill_Fletching_icon.png",
+      Fishing: "https://oldschool.runescape.wiki/images/Skill_Fishing_icon.png",
+      Firemaking: "https://oldschool.runescape.wiki/images/Skill_Firemaking_icon.png",
+      Crafting: "https://oldschool.runescape.wiki/images/Skill_Crafting_icon.png",
+      Smithing: "https://oldschool.runescape.wiki/images/Skill_Smithing_icon.png",
+      Mining: "https://oldschool.runescape.wiki/images/Skill_Mining_icon.png",
+      Herblore: "https://oldschool.runescape.wiki/images/Skill_Herblore_icon.png",
+      Agility: "https://oldschool.runescape.wiki/images/Skill_Agility_icon.png",
+      Thieving: "https://oldschool.runescape.wiki/images/Skill_Thieving_icon.png",
+      Slayer: "https://oldschool.runescape.wiki/images/Skill_Slayer_icon.png",
+      Farming: "https://oldschool.runescape.wiki/images/Skill_Farming_icon.png",
+      Runecraft: "https://oldschool.runescape.wiki/images/Skill_Runecrafting_icon.png",
+      Hunter: "https://oldschool.runescape.wiki/images/Skill_Hunter_icon.png",
+      Construction: "https://oldschool.runescape.wiki/images/Skill_Construction_icon.png"
+    };
 
+    function calculateCombat(stats) {
+      const base = 0.25 * (stats.defence + stats.hitpoints + Math.floor(stats.prayer / 2));
       const melee = 0.325 * (stats.attack + stats.strength);
       const range = 0.325 * (Math.floor(stats.ranged / 2) + stats.ranged);
       const mage  = 0.325 * (Math.floor(stats.magic / 2) + stats.magic);
-
       return Math.floor(base + Math.max(melee, range, mage));
+    }
+
+    function xpForLevel(n) {
+      let points = 0;
+      for (let lvl = 1; lvl <= n; lvl++) {
+        points += Math.floor(lvl + 300 * Math.pow(2, lvl / 7));
+      }
+      return Math.floor(points / 4);
     }
 
     const url =
       "https://api.allorigins.win/raw?url=" +
       encodeURIComponent(
-        "https://secure.runescape.com/m=hiscore_oldschool/index_lite.ws?player=" +
-        username
+        "https://secure.runescape.com/m=hiscore_oldschool/index_lite.ws?player=" + username
       );
 
     fetch(url)
@@ -111,6 +168,7 @@
           if (parts.length < 2) return;
 
           const level = parseInt(parts[1], 10);
+          const xp = parseInt(parts[2], 10);
           const key = skills[i].toLowerCase();
 
           levels[key] = level;
@@ -118,13 +176,29 @@
 
           const div = document.createElement("div");
           div.className = "skill";
-          div.innerHTML = `<span>${skills[i]}</span><strong>${level}</strong>`;
+
+          // Skill icon + name
+          div.innerHTML = `
+            <div class="skill-name">
+              <img src="${skillIcons[skills[i]]}" alt="${skills[i]}"/>
+              <span>${skills[i]}</span>
+            </div>
+            <strong>${level}</strong>
+          `;
+
+          // XP bar
+          const nextXP = xpForLevel(level + 1);
+          const percent = Math.min(100, Math.floor((xp / nextXP) * 100));
+          const bar = document.createElement("div");
+          bar.className = "progress-bar";
+          bar.innerHTML = `<div class="progress-fill" style="width:${percent}%"></div>`;
+          div.appendChild(bar);
+
           container.appendChild(div);
         });
 
         document.getElementById("total-level").textContent = totalLevel;
-        document.getElementById("combat-level").textContent =
-          calculateCombat(levels);
+        document.getElementById("combat-level").textContent = calculateCombat(levels);
       })
       .catch(err => {
         document.body.innerHTML = "Failed to load stats.";
