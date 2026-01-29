@@ -118,32 +118,33 @@
       "Thieving","Slayer","Farming","Runecraft","Hunter","Construction"
     ];
 
-const skillIcons = {
-  Overall: "icons/stats.png",
-  Attack: "icons/Attack_icon.png",
-  Defence: "icons/Defence_icon.png",
-  Strength: "icons/Strength_icon.png",
-  Hitpoints: "icons/Hitpoints_icon.png",
-  Ranged: "icons/Ranged_icon.png",
-  Prayer: "icons/Prayer_icon.png",
-  Magic: "icons/Magic_icon.png",
-  Cooking: "icons/Cooking_icon.png",
-  Woodcutting: "icons/Woodcutting_icon.png",
-  Fletching: "icons/Fletching_icon.png",
-  Fishing: "icons/Fishing_icon.png",
-  Firemaking: "icons/Firemaking_icon.png",
-  Crafting: "icons/Crafting_icon.png",
-  Smithing: "icons/Smithing_icon.png",
-  Mining: "icons/Mining_icon.png",
-  Herblore: "icons/Herblore_icon.png",
-  Agility: "icons/Agility_icon.png",
-  Thieving: "icons/Thieving_icon.png",
-  Slayer: "icons/Slayer_icon.png",
-  Farming: "icons/Farming_icon.png",
-  Runecraft: "icons/Runecraft_icon.png",
-  Hunter: "icons/Hunter_icon.png",
-  Construction: "icons/Construction_icon.png"
-};
+    const skillIcons = {
+      Overall: "icons/Stats_icon.png",
+      Attack: "icons/Attack_icon.png",
+      Defence: "icons/Defence_icon.png",
+      Strength: "icons/Strength_icon.png",
+      Hitpoints: "icons/Hitpoints_icon.png",
+      Ranged: "icons/Ranged_icon.png",
+      Prayer: "icons/Prayer_icon.png",
+      Magic: "icons/Magic_icon.png",
+      Cooking: "icons/Cooking_icon.png",
+      Woodcutting: "icons/Woodcutting_icon.png",
+      Fletching: "icons/Fletching_icon.png",
+      Fishing: "icons/Fishing_icon.png",
+      Firemaking: "icons/Firemaking_icon.png",
+      Crafting: "icons/Crafting_icon.png",
+      Smithing: "icons/Smithing_icon.png",
+      Mining: "icons/Mining_icon.png",
+      Herblore: "icons/Herblore_icon.png",
+      Agility: "icons/Agility_icon.png",
+      Thieving: "icons/Thieving_icon.png",
+      Slayer: "icons/Slayer_icon.png",
+      Farming: "icons/Farming_icon.png",
+      Runecraft: "icons/Runecraft_icon.png",
+      Hunter: "icons/Hunter_icon.png",
+      Construction: "icons/Construction_icon.png"
+    };
+
     function calculateCombat(stats) {
       const base = 0.25 * (stats.defence + stats.hitpoints + Math.floor(stats.prayer / 2));
       const melee = 0.325 * (stats.attack + stats.strength);
